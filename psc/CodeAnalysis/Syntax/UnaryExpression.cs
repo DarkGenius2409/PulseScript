@@ -1,4 +1,4 @@
-namespace psc.CodeAnalysis.Syntax
+namespace PulseScript.CodeAnalysis.Syntax
 {
     public sealed class UnaryExpression : Expression
     {
@@ -11,7 +11,7 @@ namespace psc.CodeAnalysis.Syntax
         public SyntaxToken OperatorToken { get; }
         public Expression Operand { get; }
 
-        public override SyntaxType Type => SyntaxType.UnaryExpression;
+        public override SyntaxKind Kind => SyntaxKind.UnaryExpression;
 
         public override IEnumerable<SyntaxNode> GetChildren()
         {

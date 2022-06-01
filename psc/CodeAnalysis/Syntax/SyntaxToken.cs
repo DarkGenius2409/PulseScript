@@ -1,16 +1,16 @@
-namespace psc.CodeAnalysis.Syntax
+namespace PulseScript.CodeAnalysis.Syntax
 {
     public class SyntaxToken : SyntaxNode
     {
-        public SyntaxToken(SyntaxType type, int position, string text, object value)
+        public SyntaxToken(SyntaxKind kind, int position, string text, object value)
         {
-            Type = type;
+            Kind = kind;
             Position = position;
             Text = text;
             Value = value;
         }
 
-        public override SyntaxType Type { get; }
+        public override SyntaxKind Kind { get; }
 
         public int Position { get; }
         public string Text { get; }

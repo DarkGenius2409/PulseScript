@@ -1,33 +1,33 @@
-namespace psc.CodeAnalysis.Syntax
+namespace PulseScript.CodeAnalysis.Syntax
 {
     internal static class SyntaxFacts
     {
 
-        public static int GetUnaryOperatorPrecedence(this SyntaxType type)
+        public static int GetUnaryOperatorPrecedence(this SyntaxKind type)
         {
             switch (type)
             {
-                case SyntaxType.PlusToken:
-                case SyntaxType.MinusToken:
+                case SyntaxKind.PlusToken:
+                case SyntaxKind.MinusToken:
                     return 4;
 
                 default:
                     return 0;
             }
         }
-        public static int GetBinaryOperatorPrecedence(this SyntaxType type)
+        public static int GetBinaryOperatorPrecedence(this SyntaxKind type)
         {
             switch (type)
             {
-                case SyntaxType.ArrowToken:
+                case SyntaxKind.ArrowToken:
                     return 3;
 
-                case SyntaxType.MultToken:
-                case SyntaxType.DivToken:
+                case SyntaxKind.MultToken:
+                case SyntaxKind.DivToken:
                     return 2;
 
-                case SyntaxType.PlusToken:
-                case SyntaxType.MinusToken:
+                case SyntaxKind.PlusToken:
+                case SyntaxKind.MinusToken:
                     return 1;
 
                 default:

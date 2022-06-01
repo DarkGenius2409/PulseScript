@@ -1,4 +1,4 @@
-namespace psc.CodeAnalysis.Syntax
+namespace PulseScript.CodeAnalysis.Syntax
 {
     internal sealed class Lexer
     {
@@ -31,7 +31,7 @@ namespace psc.CodeAnalysis.Syntax
         public SyntaxToken Lex()
         {
             if (_position >= _text.Length)
-                return new SyntaxToken(SyntaxType.EOFToken, _position, "\0", null);
+                return new SyntaxToken(SyntaxKind.EOFToken, _position, "\0", null);
 
             if (char.IsDigit(Current))
             {
@@ -46,7 +46,7 @@ namespace psc.CodeAnalysis.Syntax
                 {
                     _diagnostics.Add($"The number {_text} isn't valed Int32");
                 }
-                return new SyntaxToken(SyntaxType.NumberToken, start, text, value);
+                return new SyntaxToken(SyntaxKind.NumberToken, start, text, value);
             }
 
             if (char.IsWhiteSpace(Current))
@@ -58,29 +58,29 @@ namespace psc.CodeAnalysis.Syntax
 
                 var length = _position - start;
                 var text = _text.Substring(start, length);
-                return new SyntaxToken(SyntaxType.WhitespaceToken, start, text, null);
+                return new SyntaxToken(SyntaxKind.WhitespaceToken, start, text, null);
             }
 
             switch (Current)
             {
                 case '+':
-                    return new SyntaxToken(SyntaxType.PlusToken, _position++, "+", null);
+                    return new SyntaxToken(SyntaxKind.PlusToken, _position++, "+", null);
                 case '-':
-                    return new SyntaxToken(SyntaxType.MinusToken, _position++, "-", null);
+                    return new SyntaxToken(SyntaxKind.MinusToken, _position++, "-", null);
                 case '*':
-                    return new SyntaxToken(SyntaxType.MultToken, _position++, "*", null);
+                    return new SyntaxToken(SyntaxKind.MultToken, _position++, "*", null);
                 case '/':
-                    return new SyntaxToken(SyntaxType.DivToken, _position++, "/", null);
+                    return new SyntaxToken(SyntaxKind.DivToken, _position++, "/", null);
                 case '(':
-                    return new SyntaxToken(SyntaxType.OpenParenthesisToken, _position++, "(", null);
+                    return new SyntaxToken(SyntaxKind.OpenParenthesisToken, _position++, "(", null);
                 case ')':
-                    return new SyntaxToken(SyntaxType.CloseParenthesisToken, _position++, ")", null);
+                    return new SyntaxToken(SyntaxKind.CloseParenthesisToken, _position++, ")", null);
                 case '^':
-                    return new SyntaxToken(SyntaxType.ArrowToken, _position++, "^", null);
+                    return new SyntaxToken(SyntaxKind.ArrowToken, _position++, "^", null);
             }
 
             _diagnostics.Add($"ERROR: bad character input: '{Current}'");
-            return new SyntaxToken(SyntaxType.UnknownToken, _position++, _text.Substring(_position - 1, 1), null);
+            return new SyntaxToken(SyntaxKind.UnknownToken, _position++, _text.Substring(_position - 1, 1), null);
         }
 
     }

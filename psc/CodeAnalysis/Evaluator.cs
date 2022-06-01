@@ -1,13 +1,13 @@
-using psc.CodeAnalysis.Syntax;
+using PulseScript.CodeAnalysis.Binding;
 
-namespace psc.CodeAnalysis
+namespace PulseScript.CodeAnalysis
 {
 
-    public sealed class Evaluator
+    internal sealed class Evaluator
     {
-        private readonly Expression _root;
+        private readonly BoundExpression _root;
 
-        public Evaluator(Expression root)
+        public Evaluator(BoundExpression root)
         {
             _root = root;
         }
@@ -17,51 +17,51 @@ namespace psc.CodeAnalysis
             return EvaluateExpression(_root);
         }
 
-        private int EvaluateExpression(Expression node)
+        private int EvaluateExpression(BoundExpression node)
         {
-            if (node is LiteralExpression n)
-                return (int)n.LiteralToken.Value;
-            if (node is UnaryExpression u)
+            if (node is BoundLiteralExpression n)
+                return (int)n.Value;
+            if (node is BoundUnaryExpression u)
             {
                 var operand = EvaluateExpression(u.Operand);
 
-                switch (u.OperatorToken.Type)
+                switch (u.OperatorKind)
                 {
-                    case SyntaxType.PlusToken:
+                    case BoundUnaryOperatorKind.Identity:
                         return operand;
-                    case SyntaxType.MinusToken:
+                    case BoundUnaryOperatorKind.Negation:
                         return -operand;
                     default:
-                        throw new Exception($"Unexpected unary operator {u.OperatorToken.Type}");
+                        throw new Exception($"Unexpected unary operator {u.OperatorKind}");
                 }
 
             }
-            if (node is BinaryExpression b)
+            if (node is BoundBinaryExpression b)
             {
                 var left = EvaluateExpression(b.Left);
                 var right = EvaluateExpression(b.Right);
 
-                switch (b.OperatorToken.Type)
+                switch (b.OperatorKind)
                 {
-                    case SyntaxType.PlusToken:
+                    case BoundBinaryOperatorKind.Addition:
                         return left + right;
-                    case SyntaxType.MinusToken:
+                    case BoundBinaryOperatorKind.Subtraction:
                         return left - right;
-                    case SyntaxType.MultToken:
+                    case BoundBinaryOperatorKind.Multiplication:
                         return left * right;
-                    case SyntaxType.DivToken:
+                    case BoundBinaryOperatorKind.Division:
                         return left / right;
-                    case SyntaxType.ArrowToken:
+                    case BoundBinaryOperatorKind.Exponentiation:
                         return (int)Math.Pow(left, right);
                     default:
-                        throw new Exception($"Unexpected binary operator {b.OperatorToken.Type}");
+                        throw new Exception($"Unexpected binary operator {b.OperatorKind}");
                 }
             }
-            if (node is ParenthesesExpression p)
-                return EvaluateExpression(p.Expression);
+            // if (node is ParenthesesExpression p)
+            //     return EvaluateExpression(p.Expression);
 
 
-            throw new Exception($"Unexpected node {node.Type}");
+            throw new Exception($"Unexpected node {node.Kind}");
         }
     }
 }

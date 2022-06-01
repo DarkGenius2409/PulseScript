@@ -1,4 +1,4 @@
-namespace psc.CodeAnalysis.Syntax
+namespace PulseScript.CodeAnalysis.Syntax
 {
     internal sealed class Parser
     {
@@ -16,11 +16,11 @@ namespace psc.CodeAnalysis.Syntax
             {
                 token = lexer.Lex();
 
-                if (token.Type != SyntaxType.WhitespaceToken && token.Type != SyntaxType.UnknownToken)
+                if (token.Kind != SyntaxKind.WhitespaceToken && token.Kind != SyntaxKind.UnknownToken)
                 {
                     tokens.Add(token);
                 }
-            } while (token.Type != SyntaxType.EOFToken);
+            } while (token.Kind != SyntaxKind.EOFToken);
 
             _tokens = tokens.ToArray();
             _diagnostics.AddRange(lexer.Diagnostics);
@@ -47,25 +47,25 @@ namespace psc.CodeAnalysis.Syntax
             return current;
         }
 
-        private SyntaxToken MatchToken(SyntaxType type)
+        private SyntaxToken MatchToken(SyntaxKind type)
         {
-            if (Current.Type == type)
+            if (Current.Kind == type)
                 return NextToken();
 
-            _diagnostics.Add($"ERROR: Unexpected token <{Current.Type}>, expected <{type}>");
+            _diagnostics.Add($"ERROR: Unexpected token <{Current.Kind}>, expected <{type}>");
             return new SyntaxToken(type, Current.Position, null, null);
         }
 
         public SyntaxTree Parse()
         {
             var expression = ParseExpression();
-            var eofToken = MatchToken(SyntaxType.EOFToken);
+            var eofToken = MatchToken(SyntaxKind.EOFToken);
             return new SyntaxTree(_diagnostics, expression, eofToken);
         }
         private Expression ParseExpression(int parentPrecedence = 0)
         {
             Expression left;
-            var unaryOperatorPrecedence = Current.Type.GetUnaryOperatorPrecedence();
+            var unaryOperatorPrecedence = Current.Kind.GetUnaryOperatorPrecedence();
             if (unaryOperatorPrecedence != 0 && unaryOperatorPrecedence >= parentPrecedence)
             {
                 var operatorToken = NextToken();
@@ -79,7 +79,7 @@ namespace psc.CodeAnalysis.Syntax
 
             while (true)
             {
-                var precedence = Current.Type.GetBinaryOperatorPrecedence();
+                var precedence = Current.Kind.GetBinaryOperatorPrecedence();
                 if (precedence == 0 || precedence <= parentPrecedence)
                     break;
                 var operatorToken = NextToken();
@@ -91,14 +91,14 @@ namespace psc.CodeAnalysis.Syntax
 
         private Expression ParsePrimaryExpression()
         {
-            if (Current.Type == SyntaxType.OpenParenthesisToken)
+            if (Current.Kind == SyntaxKind.OpenParenthesisToken)
             {
                 var left = NextToken();
                 var expression = ParseExpression();
-                var right = MatchToken(SyntaxType.CloseParenthesisToken);
+                var right = MatchToken(SyntaxKind.CloseParenthesisToken);
                 return new ParenthesesExpression(left, expression, right);
             }
-            var numberToken = MatchToken(SyntaxType.NumberToken);
+            var numberToken = MatchToken(SyntaxKind.NumberToken);
             return new LiteralExpression(numberToken);
         }
     }

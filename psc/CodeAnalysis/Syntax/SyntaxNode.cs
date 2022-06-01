@@ -1,8 +1,8 @@
-namespace psc.CodeAnalysis.Syntax
+namespace PulseScript.CodeAnalysis.Syntax
 {
     public abstract class SyntaxNode
     {
-        public abstract SyntaxType Type { get; }
+        public abstract SyntaxKind Kind { get; }
 
         public abstract IEnumerable<SyntaxNode> GetChildren();
     }

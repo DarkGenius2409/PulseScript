@@ -1,4 +1,4 @@
-namespace psc.CodeAnalysis.Syntax
+namespace PulseScript.CodeAnalysis.Syntax
 {
     sealed class LiteralExpression : Expression
     {
@@ -7,7 +7,7 @@ namespace psc.CodeAnalysis.Syntax
             LiteralToken = literalToken;
         }
 
-        public override SyntaxType Type => SyntaxType.LiteralExpression;
+        public override SyntaxKind Kind => SyntaxKind.LiteralExpression;
 
         public SyntaxToken LiteralToken { get; }
 

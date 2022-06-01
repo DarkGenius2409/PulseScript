@@ -1,4 +1,4 @@
-namespace psc.CodeAnalysis.Syntax
+namespace PulseScript.CodeAnalysis.Syntax
 {
     public sealed class BinaryExpression : Expression
     {
@@ -13,7 +13,7 @@ namespace psc.CodeAnalysis.Syntax
         public SyntaxToken OperatorToken { get; }
         public Expression Right { get; }
 
-        public override SyntaxType Type => SyntaxType.BinaryExpression;
+        public override SyntaxKind Kind => SyntaxKind.BinaryExpression;
 
         public override IEnumerable<SyntaxNode> GetChildren()
         {

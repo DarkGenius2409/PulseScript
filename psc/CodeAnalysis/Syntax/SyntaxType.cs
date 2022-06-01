@@ -1,6 +1,6 @@
-namespace psc.CodeAnalysis.Syntax
+namespace PulseScript.CodeAnalysis.Syntax
 {
-    public enum SyntaxType
+    public enum SyntaxKind
     {
         // Tokens
         UnknownToken,
