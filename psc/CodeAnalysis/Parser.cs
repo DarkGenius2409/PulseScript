@@ -62,51 +62,40 @@ namespace psc.CodeAnalysis
             var eofToken = MatchToken(SyntaxType.EOFToken);
             return new SyntaxTree(_diagnostics, expression, eofToken);
         }
-
-        private Expression ParseExpression()
-        {
-            return ParseTerm();
-        }
-
-        private Expression ParseTerm()
-        {
-            var left = ParseFactor();
-            while (Current.Type == SyntaxType.PlusToken
-                   || Current.Type == SyntaxType.MinusToken)
-            {
-                var operatorToken = NextToken();
-                var right = ParseFactor();
-                left = new BinaryExpression(left, operatorToken, right);
-            }
-
-            return left;
-        }
-
-        private Expression ParseFactor()
-        {
-            var left = ParseExponent();
-            while (Current.Type == SyntaxType.MultToken
-                   || Current.Type == SyntaxType.DivToken)
-            {
-                var operatorToken = NextToken();
-                var right = ParseExponent();
-                left = new BinaryExpression(left, operatorToken, right);
-            }
-
-            return left;
-        }
-
-        private Expression ParseExponent()
+        private Expression ParseExpression(int parentPrecedence = 0)
         {
             var left = ParsePrimaryExpression();
-            while (Current.Type == SyntaxType.ArrowToken)
+
+            while (true)
             {
+                var precedence = GetBinaryOperatorPrecedence(Current.Type);
+                if (precedence == 0 || precedence <= parentPrecedence)
+                    break;
                 var operatorToken = NextToken();
-                var right = ParsePrimaryExpression();
+                var right = ParseExpression(precedence);
                 left = new BinaryExpression(left, operatorToken, right);
             }
-
             return left;
+        }
+
+        private static int GetBinaryOperatorPrecedence(SyntaxType type)
+        {
+            switch (type)
+            {
+                case SyntaxType.ArrowToken:
+                    return 3;
+
+                case SyntaxType.MultToken:
+                case SyntaxType.DivToken:
+                    return 2;
+
+                case SyntaxType.PlusToken:
+                case SyntaxType.MinusToken:
+                    return 1;
+
+                default:
+                    return 0;
+            }
         }
 
         private Expression ParsePrimaryExpression()
