@@ -1,19 +1,19 @@
 namespace psc.CodeAnalysis
 {
-    sealed class NumberExpression : Expression
+    sealed class LiteralExpression : Expression
     {
-        public NumberExpression(SyntaxToken numberToken)
+        public LiteralExpression(SyntaxToken literalToken)
         {
-            NumberToken = numberToken;
+            LiteralToken = literalToken;
         }
 
-        public override SyntaxType Type => SyntaxType.NumberExpression;
+        public override SyntaxType Type => SyntaxType.LiteralExpression;
 
-        public SyntaxToken NumberToken { get; }
+        public SyntaxToken LiteralToken { get; }
 
         public override IEnumerable<SyntaxNode> GetChildren()
         {
-            yield return NumberToken;
+            yield return LiteralToken;
         }
     }
 }

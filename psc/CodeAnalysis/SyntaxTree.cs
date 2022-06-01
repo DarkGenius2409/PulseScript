@@ -1,6 +1,6 @@
 namespace psc.CodeAnalysis
 {
-    sealed class SyntaxTree
+    public sealed class SyntaxTree
     {
         public SyntaxTree(IEnumerable<string> diagnostics, Expression root, SyntaxToken eofToken)
         {

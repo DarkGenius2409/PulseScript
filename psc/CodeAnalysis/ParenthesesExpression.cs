@@ -1,6 +1,6 @@
 namespace psc.CodeAnalysis
 {
-    sealed class ParenthesesExpression : Expression
+    public sealed class ParenthesesExpression : Expression
     {
         public ParenthesesExpression(SyntaxToken openParenthesisToken, Expression expression, SyntaxToken closeParenthesisToken)
         {

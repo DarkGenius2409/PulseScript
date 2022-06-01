@@ -1,6 +1,6 @@
 namespace psc.CodeAnalysis
 {
-    abstract class Expression : SyntaxNode
+    public abstract class Expression : SyntaxNode
     {
 
     }

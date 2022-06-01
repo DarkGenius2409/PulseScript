@@ -1,7 +1,7 @@
 namespace psc.CodeAnalysis
 {
 
-    class Evaluator
+    public sealed class Evaluator
     {
         private readonly Expression _root;
 
@@ -17,8 +17,8 @@ namespace psc.CodeAnalysis
 
         private int EvaluateExpression(Expression node)
         {
-            if (node is NumberExpression n)
-                return (int)n.NumberToken.Value;
+            if (node is LiteralExpression n)
+                return (int)n.LiteralToken.Value;
             if (node is BinaryExpression b)
             {
                 var left = EvaluateExpression(b.Left);

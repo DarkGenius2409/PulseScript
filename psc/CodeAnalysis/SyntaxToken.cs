@@ -1,6 +1,6 @@
 namespace psc.CodeAnalysis
 {
-    class SyntaxToken : SyntaxNode
+    public class SyntaxToken : SyntaxNode
     {
         public SyntaxToken(SyntaxType type, int position, string text, object value)
         {

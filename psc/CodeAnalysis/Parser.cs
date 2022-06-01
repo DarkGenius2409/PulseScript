@@ -1,6 +1,6 @@
 namespace psc.CodeAnalysis
 {
-    class Parser
+    internal sealed class Parser
     {
         private readonly SyntaxToken[] _tokens;
         private int _position;
@@ -47,7 +47,7 @@ namespace psc.CodeAnalysis
             return current;
         }
 
-        private SyntaxToken Match(SyntaxType type)
+        private SyntaxToken MatchToken(SyntaxType type)
         {
             if (Current.Type == type)
                 return NextToken();
@@ -58,8 +58,8 @@ namespace psc.CodeAnalysis
 
         public SyntaxTree Parse()
         {
-            var expression = ParseTerm();
-            var eofToken = Match(SyntaxType.EOFToken);
+            var expression = ParseExpression();
+            var eofToken = MatchToken(SyntaxType.EOFToken);
             return new SyntaxTree(_diagnostics, expression, eofToken);
         }
 
@@ -115,11 +115,11 @@ namespace psc.CodeAnalysis
             {
                 var left = NextToken();
                 var expression = ParseExpression();
-                var right = Match(SyntaxType.CloseParenthesisToken);
+                var right = MatchToken(SyntaxType.CloseParenthesisToken);
                 return new ParenthesesExpression(left, expression, right);
             }
-            var numberToken = Match(SyntaxType.NumberToken);
-            return new NumberExpression(numberToken);
+            var numberToken = MatchToken(SyntaxType.NumberToken);
+            return new LiteralExpression(numberToken);
         }
     }
 }

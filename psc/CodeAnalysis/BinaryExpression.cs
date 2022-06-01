@@ -1,6 +1,6 @@
 namespace psc.CodeAnalysis
 {
-    sealed class BinaryExpression : Expression
+    public sealed class BinaryExpression : Expression
     {
         public BinaryExpression(Expression left, SyntaxToken operatorToken, Expression right)
         {

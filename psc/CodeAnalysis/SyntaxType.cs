@@ -1,20 +1,24 @@
 namespace psc.CodeAnalysis
 {
-    enum SyntaxType
+    public enum SyntaxType
     {
-        NumberToken,
+        // Tokens
+        UnknownToken,
+        EOFToken,
         WhitespaceToken,
+        NumberToken,
         PlusToken,
         MinusToken,
         MultToken,
         DivToken,
+        ArrowToken,
         OpenParenthesisToken,
         CloseParenthesisToken,
-        UnknownToken,
-        EOFToken,
-        NumberExpression,
+
+        // Expressions
+        LiteralExpression,
         BinaryExpression,
         ParenthesesExpression,
-        ArrowToken
+
     }
 }
