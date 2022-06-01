@@ -68,7 +68,7 @@ namespace psc.CodeAnalysis
 
             while (true)
             {
-                var precedence = GetBinaryOperatorPrecedence(Current.Type);
+                var precedence = SyntaxGetBinaryOperatorPrecedence(Current.Type);
                 if (precedence == 0 || precedence <= parentPrecedence)
                     break;
                 var operatorToken = NextToken();
@@ -76,26 +76,6 @@ namespace psc.CodeAnalysis
                 left = new BinaryExpression(left, operatorToken, right);
             }
             return left;
-        }
-
-        private static int GetBinaryOperatorPrecedence(SyntaxType type)
-        {
-            switch (type)
-            {
-                case SyntaxType.ArrowToken:
-                    return 3;
-
-                case SyntaxType.MultToken:
-                case SyntaxType.DivToken:
-                    return 2;
-
-                case SyntaxType.PlusToken:
-                case SyntaxType.MinusToken:
-                    return 1;
-
-                default:
-                    return 0;
-            }
         }
 
         private Expression ParsePrimaryExpression()
