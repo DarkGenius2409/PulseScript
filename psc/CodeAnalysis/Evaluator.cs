@@ -1,3 +1,5 @@
+using psc.CodeAnalysis.Syntax;
+
 namespace psc.CodeAnalysis
 {
 

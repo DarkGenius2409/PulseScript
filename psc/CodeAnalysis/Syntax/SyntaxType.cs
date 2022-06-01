@@ -1,4 +1,4 @@
-namespace psc.CodeAnalysis
+namespace psc.CodeAnalysis.Syntax
 {
     public enum SyntaxType
     {
