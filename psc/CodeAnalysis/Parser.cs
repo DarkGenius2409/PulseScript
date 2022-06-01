@@ -14,7 +14,7 @@ namespace psc.CodeAnalysis
             SyntaxToken token;
             do
             {
-                token = lexer.NextToken();
+                token = lexer.Lex();
 
                 if (token.Type != SyntaxType.WhitespaceToken && token.Type != SyntaxType.UnknownToken)
                 {

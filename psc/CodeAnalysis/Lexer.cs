@@ -28,12 +28,8 @@ namespace psc.CodeAnalysis
             _position++;
         }
 
-        public SyntaxToken NextToken()
+        public SyntaxToken Lex()
         {
-            // <numbers>
-            // + - * / (  )
-            // whitespace
-
             if (_position >= _text.Length)
                 return new SyntaxToken(SyntaxType.EOFToken, _position, "\0", null);
 
@@ -65,20 +61,23 @@ namespace psc.CodeAnalysis
                 return new SyntaxToken(SyntaxType.WhitespaceToken, start, text, null);
             }
 
-            if (Current == '+')
-                return new SyntaxToken(SyntaxType.PlusToken, _position++, "+", null);
-            else if (Current == '-')
-                return new SyntaxToken(SyntaxType.MinusToken, _position++, "-", null);
-            else if (Current == '*')
-                return new SyntaxToken(SyntaxType.MultToken, _position++, "*", null);
-            else if (Current == '/')
-                return new SyntaxToken(SyntaxType.DivToken, _position++, "/", null);
-            else if (Current == '(')
-                return new SyntaxToken(SyntaxType.OpenParenthesisToken, _position++, "(", null);
-            else if (Current == ')')
-                return new SyntaxToken(SyntaxType.CloseParenthesisToken, _position++, ")", null);
-            else if (Current == '^')
-                return new SyntaxToken(SyntaxType.ArrowToken, _position++, "^", null);
+            switch (Current)
+            {
+                case '+':
+                    return new SyntaxToken(SyntaxType.PlusToken, _position++, "+", null);
+                case '-':
+                    return new SyntaxToken(SyntaxType.MinusToken, _position++, "-", null);
+                case '*':
+                    return new SyntaxToken(SyntaxType.MultToken, _position++, "*", null);
+                case '/':
+                    return new SyntaxToken(SyntaxType.DivToken, _position++, "/", null);
+                case '(':
+                    return new SyntaxToken(SyntaxType.OpenParenthesisToken, _position++, "(", null);
+                case ')':
+                    return new SyntaxToken(SyntaxType.CloseParenthesisToken, _position++, ")", null);
+                case '^':
+                    return new SyntaxToken(SyntaxType.ArrowToken, _position++, "^", null);
+            }
 
             _diagnostics.Add($"ERROR: bad character input: '{Current}'");
             return new SyntaxToken(SyntaxType.UnknownToken, _position++, _text.Substring(_position - 1, 1), null);
