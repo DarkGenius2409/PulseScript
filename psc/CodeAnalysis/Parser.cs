@@ -64,11 +64,22 @@ namespace psc.CodeAnalysis
         }
         private Expression ParseExpression(int parentPrecedence = 0)
         {
-            var left = ParsePrimaryExpression();
+            Expression left;
+            var unaryOperatorPrecedence = Current.Type.GetUnaryOperatorPrecedence();
+            if (unaryOperatorPrecedence != 0 && unaryOperatorPrecedence >= parentPrecedence)
+            {
+                var operatorToken = NextToken();
+                var operand = ParseExpression(unaryOperatorPrecedence);
+                left = new UnaryExpression(operatorToken, operand);
+            }
+            else
+            {
+                left = ParsePrimaryExpression();
+            }
 
             while (true)
             {
-                var precedence = SyntaxGetBinaryOperatorPrecedence(Current.Type);
+                var precedence = Current.Type.GetBinaryOperatorPrecedence();
                 if (precedence == 0 || precedence <= parentPrecedence)
                     break;
                 var operatorToken = NextToken();

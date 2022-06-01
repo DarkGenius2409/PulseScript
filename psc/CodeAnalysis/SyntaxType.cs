@@ -17,6 +17,7 @@ namespace psc.CodeAnalysis
 
         // Expressions
         LiteralExpression,
+        UnaryExpression,
         BinaryExpression,
         ParenthesesExpression,
 

@@ -19,25 +19,41 @@ namespace psc.CodeAnalysis
         {
             if (node is LiteralExpression n)
                 return (int)n.LiteralToken.Value;
+            if (node is UnaryExpression u)
+            {
+                var operand = EvaluateExpression(u.Operand);
+
+                switch (u.OperatorToken.Type)
+                {
+                    case SyntaxType.PlusToken:
+                        return operand;
+                    case SyntaxType.MinusToken:
+                        return -operand;
+                    default:
+                        throw new Exception($"Unexpected unary operator {u.OperatorToken.Type}");
+                }
+
+            }
             if (node is BinaryExpression b)
             {
                 var left = EvaluateExpression(b.Left);
                 var right = EvaluateExpression(b.Right);
 
-                if (b.OperatorToken.Type == SyntaxType.PlusToken)
-                    return left + right;
-                else if (b.OperatorToken.Type == SyntaxType.MinusToken)
-                    return left - right;
-                else if (b.OperatorToken.Type == SyntaxType.MultToken)
-                    return left * right;
-                else if (b.OperatorToken.Type == SyntaxType.DivToken)
-                    return left / right;
-                else if (b.OperatorToken.Type == SyntaxType.ArrowToken)
+                switch (b.OperatorToken.Type)
                 {
-                    return (int)Math.Pow(left, right);
+                    case SyntaxType.PlusToken:
+                        return left + right;
+                    case SyntaxType.MinusToken:
+                        return left - right;
+                    case SyntaxType.MultToken:
+                        return left * right;
+                    case SyntaxType.DivToken:
+                        return left / right;
+                    case SyntaxType.ArrowToken:
+                        return (int)Math.Pow(left, right);
+                    default:
+                        throw new Exception($"Unexpected binary operator {b.OperatorToken.Type}");
                 }
-                else
-                    throw new Exception($"Unexpected binary operator {b.OperatorToken.Type}");
             }
             if (node is ParenthesesExpression p)
                 return EvaluateExpression(p.Expression);
