@@ -82,9 +82,9 @@ namespace PulseScript.CodeAnalysis.Syntax
                 case '-':
                     return new SyntaxToken(SyntaxKind.MinusToken, _position++, "-", null);
                 case '*':
-                    return new SyntaxToken(SyntaxKind.MultToken, _position++, "*", null);
+                    return new SyntaxToken(SyntaxKind.StarToken, _position++, "*", null);
                 case '/':
-                    return new SyntaxToken(SyntaxKind.DivToken, _position++, "/", null);
+                    return new SyntaxToken(SyntaxKind.SlashToken, _position++, "/", null);
                 case '(':
                     return new SyntaxToken(SyntaxKind.OpenParenthesisToken, _position++, "(", null);
                 case ')':
@@ -92,14 +92,21 @@ namespace PulseScript.CodeAnalysis.Syntax
                 case '^':
                     return new SyntaxToken(SyntaxKind.ArrowToken, _position++, "^", null);
                 case '!':
-                    return new SyntaxToken(SyntaxKind.NotToken, _position++, "!", null);
+                    if (LookAhead == '=')
+                        return new SyntaxToken(SyntaxKind.ExclamationEqualsToken, _position += 2, "!=", null);
+                    else
+                        return new SyntaxToken(SyntaxKind.ExclamationToken, _position++, "!", null);
                 case '&':
                     if (LookAhead == '&')
-                        return new SyntaxToken(SyntaxKind.AndToken, _position += 2, "&&", null);
+                        return new SyntaxToken(SyntaxKind.DoubleAmpersandToken, _position += 2, "&&", null);
                     break;
                 case '|':
                     if (LookAhead == '|')
-                        return new SyntaxToken(SyntaxKind.OrToken, _position += 2, "||", null);
+                        return new SyntaxToken(SyntaxKind.DoublePipeToken, _position += 2, "||", null);
+                    break;
+                case '=':
+                    if (LookAhead == '=')
+                        return new SyntaxToken(SyntaxKind.DoubleEqualsToken, _position += 2, "==", null);
                     break;
             }
 

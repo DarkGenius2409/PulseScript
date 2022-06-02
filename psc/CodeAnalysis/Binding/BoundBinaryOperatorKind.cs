@@ -8,6 +8,8 @@ namespace PulseScript.CodeAnalysis.Binding
         Division,
         Exponentiation,
         LogicalAnd,
-        LogicalOr
+        LogicalOr,
+        Equals,
+        NotEquals,
     }
 }
