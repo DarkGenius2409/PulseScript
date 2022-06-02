@@ -26,7 +26,7 @@ namespace PulseScript.CodeAnalysis.Binding
 
         private BoundExpression BindLiteralExpression(LiteralExpression syntax)
         {
-            var value = syntax.LiteralToken.Value as int? ?? 0;
+            var value = syntax.Value ?? 0;
             return new BoundLiteralExpression(value);
         }
 
@@ -59,6 +59,7 @@ namespace PulseScript.CodeAnalysis.Binding
         {
             if (operandType != typeof(int))
                 return null;
+
 
             switch (kind)
             {

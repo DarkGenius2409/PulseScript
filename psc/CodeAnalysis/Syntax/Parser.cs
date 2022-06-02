@@ -91,15 +91,30 @@ namespace PulseScript.CodeAnalysis.Syntax
 
         private Expression ParsePrimaryExpression()
         {
-            if (Current.Kind == SyntaxKind.OpenParenthesisToken)
+            switch (Current.Kind)
             {
-                var left = NextToken();
-                var expression = ParseExpression();
-                var right = MatchToken(SyntaxKind.CloseParenthesisToken);
-                return new ParenthesesExpression(left, expression, right);
+                case SyntaxKind.OpenParenthesisToken:
+                    {
+                        var left = NextToken();
+                        var expression = ParseExpression();
+                        var right = MatchToken(SyntaxKind.CloseParenthesisToken);
+                        return new ParenthesesExpression(left, expression, right);
+                    }
+
+                case SyntaxKind.FalseKeyword:
+                case SyntaxKind.TrueKeyword:
+                    {
+                        var keywordToken = NextToken();
+                        var value = Current.Kind == SyntaxKind.TrueKeyword;
+                        return new LiteralExpression(keywordToken, value);
+                    }
+
+                default:
+                    {
+                        var numberToken = MatchToken(SyntaxKind.NumberToken);
+                        return new LiteralExpression(numberToken);
+                    }
             }
-            var numberToken = MatchToken(SyntaxKind.NumberToken);
-            return new LiteralExpression(numberToken);
         }
     }
 }

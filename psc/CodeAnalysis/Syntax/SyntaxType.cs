@@ -14,12 +14,16 @@ namespace PulseScript.CodeAnalysis.Syntax
         ArrowToken,
         OpenParenthesisToken,
         CloseParenthesisToken,
+        IdentifierToken,
+
+        // Keywords
+        TrueKeyword,
+        FalseKeyword,
 
         // Expressions
         LiteralExpression,
         UnaryExpression,
         BinaryExpression,
         ParenthesesExpression,
-
     }
 }
