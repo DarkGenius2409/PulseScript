@@ -105,7 +105,7 @@ namespace PulseScript.CodeAnalysis.Syntax
                 case SyntaxKind.TrueKeyword:
                     {
                         var keywordToken = NextToken();
-                        var value = Current.Kind == SyntaxKind.TrueKeyword;
+                        var value = keywordToken.Kind == SyntaxKind.TrueKeyword;
                         return new LiteralExpression(keywordToken, value);
                     }
 

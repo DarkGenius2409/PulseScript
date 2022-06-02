@@ -9,7 +9,8 @@ namespace PulseScript.CodeAnalysis.Syntax
             {
                 case SyntaxKind.PlusToken:
                 case SyntaxKind.MinusToken:
-                    return 4;
+                case SyntaxKind.NotToken:
+                    return 6;
 
                 default:
                     return 0;
@@ -20,14 +21,20 @@ namespace PulseScript.CodeAnalysis.Syntax
             switch (type)
             {
                 case SyntaxKind.ArrowToken:
-                    return 3;
+                    return 5;
 
                 case SyntaxKind.MultToken:
                 case SyntaxKind.DivToken:
-                    return 2;
+                    return 4;
 
                 case SyntaxKind.PlusToken:
                 case SyntaxKind.MinusToken:
+                    return 3;
+
+                case SyntaxKind.AndToken:
+                    return 2;
+
+                case SyntaxKind.OrToken:
                     return 1;
 
                 default:

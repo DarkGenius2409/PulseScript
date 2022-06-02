@@ -6,6 +6,8 @@ namespace PulseScript.CodeAnalysis.Binding
         Subtraction,
         Multiplication,
         Division,
-        Exponentiation
+        Exponentiation,
+        LogicalAnd,
+        LogicalOr
     }
 }
