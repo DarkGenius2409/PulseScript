@@ -1,6 +1,6 @@
-namespace psc.CodeAnalysis
+namespace PulseScript.CodeAnalysis.Syntax
 {
-    sealed class SyntaxTree
+    public sealed class SyntaxTree
     {
         public SyntaxTree(IEnumerable<string> diagnostics, Expression root, SyntaxToken eofToken)
         {

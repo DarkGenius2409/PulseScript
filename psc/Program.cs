@@ -1,12 +1,14 @@
-﻿using psc.CodeAnalysis;
+﻿using PulseScript.CodeAnalysis;
+using PulseScript.CodeAnalysis.Binding;
+using PulseScript.CodeAnalysis.Syntax;
 
-namespace psc
+namespace PulseScript
 {
-    class Program
+    internal static class Program
     {
-        static void Main(string[] args)
+        private static void Main()
         {
-            bool showTree = false;
+            var showTree = false;
             while (true)
             {
                 Console.Write("psc -> ");
@@ -26,29 +28,30 @@ namespace psc
                 }
 
                 var syntaxTree = SyntaxTree.Parse(line);
+                var binder = new Binder();
+                var boundExpression = binder.BindExpression(syntaxTree.Root);
 
-                var color = Console.ForegroundColor;
+                var diagnostics = syntaxTree.Diagnostics.Concat(binder.Diagnostics).ToArray();
+
                 if (showTree)
                 {
                     Console.ForegroundColor = ConsoleColor.DarkGray;
                     PrettyPrint(syntaxTree.Root);
-                    Console.ForegroundColor = color;
+                    Console.ResetColor();
                 }
 
-                if (!syntaxTree.Diagnostics.Any())
+                if (!diagnostics.Any())
                 {
-                    var e = new Evaluator(syntaxTree.Root);
+                    var e = new Evaluator(boundExpression);
                     var result = e.Evaluate();
                     Console.WriteLine(result);
                 }
                 else
                 {
                     Console.ForegroundColor = ConsoleColor.DarkRed;
-                    foreach (var diagnostic in syntaxTree.Diagnostics)
-                    {
+                    foreach (var diagnostic in diagnostics)
                         Console.WriteLine(diagnostic);
-                    }
-                    Console.ForegroundColor = color;
+                    Console.ResetColor();
                 }
             }
         }
@@ -61,7 +64,7 @@ namespace psc
 
             Console.Write(indent);
             Console.Write(marker);
-            Console.Write(node.Type);
+            Console.Write(node.Kind);
             if (node is SyntaxToken t && t.Value != null)
             {
                 Console.Write("  ");
@@ -71,7 +74,7 @@ namespace psc
             Console.WriteLine();
 
             // indent += "    ";
-            indent += isLast ? "    " : "│    ";
+            indent += isLast ? "   " : "│  ";
 
             var lastChild = node.GetChildren().LastOrDefault();
 

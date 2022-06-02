@@ -1,6 +1,6 @@
-namespace psc.CodeAnalysis
+namespace PulseScript.CodeAnalysis.Syntax
 {
-    sealed class ParenthesesExpression : Expression
+    public sealed class ParenthesesExpression : Expression
     {
         public ParenthesesExpression(SyntaxToken openParenthesisToken, Expression expression, SyntaxToken closeParenthesisToken)
         {
@@ -9,7 +9,7 @@ namespace psc.CodeAnalysis
             CloseParenthesisToken = closeParenthesisToken;
         }
 
-        public override SyntaxType Type => SyntaxType.ParenthesesExpression;
+        public override SyntaxKind Kind => SyntaxKind.ParenthesesExpression;
 
         public SyntaxToken OpenParenthesisToken { get; }
         public Expression Expression { get; }
