@@ -67,8 +67,8 @@ namespace PulseScript.CodeAnalysis
                         throw new Exception($"Unexpected binary operator {b.Op.Kind}");
                 }
             }
-            // if (node is ParenthesesExpression p)
-            //     return EvaluateExpression(p.Expression);
+            if (node is BoundParenthesesExpression p)
+                return EvaluateExpression(p.Expression);
 
 
             throw new Exception($"Unexpected node {node.Kind}");

@@ -2,7 +2,6 @@ using PulseScript.CodeAnalysis.Syntax;
 
 namespace PulseScript.CodeAnalysis.Binding
 {
-
     internal sealed class Binder
     {
         private readonly List<string> _diagnostics = new List<string>();
@@ -19,6 +18,8 @@ namespace PulseScript.CodeAnalysis.Binding
                     return BindUnaryExpression((UnaryExpression)syntax);
                 case SyntaxKind.BinaryExpression:
                     return BindBinaryExpression((BinaryExpression)syntax);
+                case SyntaxKind.ParenthesesExpression:
+                    return BindParenthesesExpression((ParenthesesExpression)syntax);
                 default:
                     throw new Exception($"Unexpected syntax {syntax.Kind}");
             }
@@ -53,6 +54,12 @@ namespace PulseScript.CodeAnalysis.Binding
                 return boundLeft;
             }
             return new BoundBinaryExpression(boundLeft, boundOperator, boundRight);
+        }
+
+        private BoundExpression BindParenthesesExpression(ParenthesesExpression syntax)
+        {
+            var expression = BindExpression(syntax.Expression);
+            return new BoundParenthesesExpression(expression);
         }
     }
 }
