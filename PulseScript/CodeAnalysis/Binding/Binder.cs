@@ -4,9 +4,9 @@ namespace PulseScript.CodeAnalysis.Binding
 {
     internal sealed class Binder
     {
-        private readonly List<string> _diagnostics = new List<string>();
+        private readonly DiagnosticList _diagnostics = new DiagnosticList();
 
-        public IEnumerable<string> Diagnostics => _diagnostics;
+        public DiagnosticList Diagnostics => _diagnostics;
 
         public BoundExpression BindExpression(Expression syntax)
         {
@@ -37,7 +37,7 @@ namespace PulseScript.CodeAnalysis.Binding
             var boundOperator = BoundUnaryOperator.Bind(syntax.OperatorToken.Kind, boundOperand.Type);
             if (boundOperator == null)
             {
-                _diagnostics.Add($"Unary operator '{syntax.OperatorToken.Text}' is not defined for type {boundOperand.Type}");
+                _diagnostics.ReportUndefinedUnaryOperator(syntax.OperatorToken.Span, syntax.OperatorToken.Text, boundOperand.Type);
                 return boundOperand;
             }
             return new BoundUnaryExpression(boundOperator, boundOperand);
@@ -50,7 +50,7 @@ namespace PulseScript.CodeAnalysis.Binding
             var boundOperator = BoundBinaryOperator.Bind(syntax.OperatorToken.Kind, boundLeft.Type, boundRight.Type);
             if (boundOperator == null)
             {
-                _diagnostics.Add($"Binary operator '{syntax.OperatorToken.Text}' is not defined for types {boundLeft.Type} and {boundRight.Type}");
+                _diagnostics.ReportUndefinedBinaryOperator(syntax.OperatorToken.Span, syntax.OperatorToken.Text, boundLeft.Type, boundRight.Type);
                 return boundLeft;
             }
             return new BoundBinaryExpression(boundLeft, boundOperator, boundRight);

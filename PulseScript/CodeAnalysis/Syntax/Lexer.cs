@@ -4,14 +4,14 @@ namespace PulseScript.CodeAnalysis.Syntax
     {
         private readonly string _text;
         private int _position;
-        private List<string> _diagnostics = new List<string>();
+        private DiagnosticList _diagnostics = new DiagnosticList();
 
         public Lexer(string text)
         {
             _text = text;
         }
 
-        public IEnumerable<string> Diagnostics => _diagnostics;
+        public DiagnosticList Diagnostics => _diagnostics;
 
         private char Current => Peek(0);
         private char LookAhead => Peek(1);
@@ -31,12 +31,14 @@ namespace PulseScript.CodeAnalysis.Syntax
 
         public SyntaxToken Lex()
         {
+            var start = _position;
+
             if (_position >= _text.Length)
                 return new SyntaxToken(SyntaxKind.EOFToken, _position, "\0", null);
 
             if (char.IsDigit(Current))
             {
-                var start = _position;
+
 
                 while (char.IsDigit(Current))
                     Next();
@@ -45,14 +47,14 @@ namespace PulseScript.CodeAnalysis.Syntax
                 var text = _text.Substring(start, length);
                 if (!int.TryParse(text, out var value))
                 {
-                    _diagnostics.Add($"The number {_text} isn't valed Int32");
+                    _diagnostics.ReportInvalidNumber(new TextSpan(start, length), _text, typeof(int));
                 }
                 return new SyntaxToken(SyntaxKind.NumberToken, start, text, value);
             }
 
             if (char.IsWhiteSpace(Current))
             {
-                var start = _position;
+
 
                 while (char.IsWhiteSpace(Current))
                     Next();
@@ -64,7 +66,7 @@ namespace PulseScript.CodeAnalysis.Syntax
 
             if (char.IsLetter(Current))
             {
-                var start = _position;
+
 
                 while (char.IsLetter(Current))
                     Next();
@@ -93,24 +95,36 @@ namespace PulseScript.CodeAnalysis.Syntax
                     return new SyntaxToken(SyntaxKind.ArrowToken, _position++, "^", null);
                 case '!':
                     if (LookAhead == '=')
-                        return new SyntaxToken(SyntaxKind.ExclamationEqualsToken, _position += 2, "!=", null);
+                    {
+                        _position += 2;
+                        return new SyntaxToken(SyntaxKind.ExclamationEqualsToken, start, "!=", null);
+                    }
                     else
                         return new SyntaxToken(SyntaxKind.ExclamationToken, _position++, "!", null);
                 case '&':
                     if (LookAhead == '&')
-                        return new SyntaxToken(SyntaxKind.DoubleAmpersandToken, _position += 2, "&&", null);
+                    {
+                        _position += 2;
+                        return new SyntaxToken(SyntaxKind.DoubleAmpersandToken, start, "&&", null);
+                    }
                     break;
                 case '|':
                     if (LookAhead == '|')
-                        return new SyntaxToken(SyntaxKind.DoublePipeToken, _position += 2, "||", null);
+                    {
+                        _position += 2;
+                        return new SyntaxToken(SyntaxKind.DoublePipeToken, start, "||", null);
+                    }
                     break;
                 case '=':
                     if (LookAhead == '=')
-                        return new SyntaxToken(SyntaxKind.DoubleEqualsToken, _position += 2, "==", null);
+                    {
+                        _position += 2;
+                        return new SyntaxToken(SyntaxKind.DoubleEqualsToken, start, "==", null);
+                    }
                     break;
             }
 
-            _diagnostics.Add($"ERROR: bad character input: '{Current}'");
+            _diagnostics.ReportBadCharacter(_position, Current);
             return new SyntaxToken(SyntaxKind.UnknownToken, _position++, _text.Substring(_position - 1, 1), null);
         }
 
