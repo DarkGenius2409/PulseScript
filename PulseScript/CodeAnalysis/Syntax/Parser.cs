@@ -4,7 +4,7 @@ namespace PulseScript.CodeAnalysis.Syntax
     {
         private readonly SyntaxToken[] _tokens;
         private int _position;
-        private List<string> _diagnostics = new List<string>();
+        private DiagnosticList _diagnostics = new DiagnosticList();
 
         public Parser(string text)
         {
@@ -26,7 +26,7 @@ namespace PulseScript.CodeAnalysis.Syntax
             _diagnostics.AddRange(lexer.Diagnostics);
         }
 
-        public IEnumerable<string> Diagnostics => _diagnostics;
+        public DiagnosticList Diagnostics => _diagnostics;
 
         private SyntaxToken Peek(int offset)
         {
@@ -47,13 +47,13 @@ namespace PulseScript.CodeAnalysis.Syntax
             return current;
         }
 
-        private SyntaxToken MatchToken(SyntaxKind type)
+        private SyntaxToken MatchToken(SyntaxKind kind)
         {
-            if (Current.Kind == type)
+            if (Current.Kind == kind)
                 return NextToken();
 
-            _diagnostics.Add($"ERROR: Unexpected token <{Current.Kind}>, expected <{type}>");
-            return new SyntaxToken(type, Current.Position, null, null);
+            _diagnostics.ReportUnexpectedToken(Current.Span, Current.Kind, kind);
+            return new SyntaxToken(kind, Current.Position, null, null);
         }
 
         public SyntaxTree Parse()

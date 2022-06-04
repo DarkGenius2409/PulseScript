@@ -2,7 +2,6 @@ using PulseScript.CodeAnalysis.Binding;
 
 namespace PulseScript.CodeAnalysis
 {
-
     internal sealed class Evaluator
     {
         private readonly BoundExpression _root;
